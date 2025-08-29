@@ -1,6 +1,8 @@
-import 'package:curso_com_bloc/data/http/http_client.dart';
-import 'package:curso_com_bloc/domain/usecases/authentication.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:curso_com_bloc/data/http/http.dart';
+import 'package:curso_com_bloc/domain/helpers/helpers.dart';
+import 'package:curso_com_bloc/domain/usecases/authentication.dart';
 
 part 'remote_authentication.g.dart';
 
@@ -11,11 +13,15 @@ class RemoteAuthentication {
   RemoteAuthentication({required this.httpClient, required this.url});
 
   Future<void> auth(AuthenticationParams params) async {
-    await httpClient.request(
-      url: url,
-      method: 'post',
-      body: RemoteAuthenticationParams.fromDomain(params).toJson(),
-    );
+    try {
+      await httpClient.request(
+        url: url,
+        method: 'post',
+        body: RemoteAuthenticationParams.fromDomain(params).toJson(),
+      );
+    } on HttpError {
+      throw DomainError.unexpected;
+    }
   }
 }
 
