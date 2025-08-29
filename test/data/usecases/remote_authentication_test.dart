@@ -19,21 +19,24 @@ void main() {
   /// sut = System Unit Test
   late String url;
 
-  setUp(() {
-    httpClient = MockHttpClient();
-    url = faker.internet.httpUrl();
-    sut = RemoteAuthentication(httpClient: httpClient, url: url);
-  });
+  late AuthenticationParams params;
+
+  setUp(
+    () {
+      httpClient = MockHttpClient();
+      url = faker.internet.httpUrl();
+      sut = RemoteAuthentication(httpClient: httpClient, url: url);
+      params = AuthenticationParams(
+        email: faker.internet.email(),
+        secret: faker.internet.password(),
+      );
+    },
+  );
 
   // Pattern de testes '3A'. Arrange, Act, Assert
   test(
     'Should call HttpClient with correct values',
     () async {
-      final params = AuthenticationParams(
-        email: faker.internet.email(),
-        secret: faker.internet.password(),
-      );
-
       await sut.auth(params);
 
       verify(
@@ -57,14 +60,12 @@ void main() {
         ),
       ).thenThrow(HttpError.badRequest);
 
-      final params = AuthenticationParams(
-        email: faker.internet.email(),
-        secret: faker.internet.password(),
-      );
-
       final future = sut.auth(params);
 
-      expect(future, throwsA(DomainError.unexpected));
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
     },
   );
 }
