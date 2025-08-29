@@ -9,12 +9,13 @@ import 'remote_authentication_test.mocks.dart';
 void main() {
   late RemoteAuthentication sut;
   late MockHttpClient httpClient;
+
+  /// sut = System Unit Test
   late String url;
 
   setUp(() {
     httpClient = MockHttpClient();
     url = faker.internet.httpUrl();
-    // sut = System Unit Test
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
   });
 
