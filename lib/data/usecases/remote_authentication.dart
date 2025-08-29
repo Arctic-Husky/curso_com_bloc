@@ -1,8 +1,9 @@
+import 'package:curso_com_bloc/domain/entities/entities.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:curso_com_bloc/data/http/http.dart';
+import 'package:curso_com_bloc/data/models/models.dart';
 import 'package:curso_com_bloc/domain/helpers/helpers.dart';
-import 'package:curso_com_bloc/domain/entities/entities.dart';
 import 'package:curso_com_bloc/domain/usecases/authentication.dart';
 
 part 'remote_authentication.g.dart';
@@ -21,7 +22,7 @@ class RemoteAuthentication {
         body: RemoteAuthenticationParams.fromDomain(params).toJson(),
       );
 
-      return AccountEntity.fromJson(httpResponse);
+      return RemoteAccountModel.fromJson(httpResponse).toEntity();
     } on HttpError catch (error) {
       switch (error) {
         case HttpError.unauthorized:
