@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:curso_com_bloc/data/http/http.dart';
 import 'package:curso_com_bloc/domain/helpers/helpers.dart';
+import 'package:curso_com_bloc/domain/entities/entities.dart';
 import 'package:curso_com_bloc/domain/usecases/authentication.dart';
 
 part 'remote_authentication.g.dart';
@@ -12,13 +13,15 @@ class RemoteAuthentication {
 
   RemoteAuthentication({required this.httpClient, required this.url});
 
-  Future<void> auth(AuthenticationParams params) async {
+  Future<AccountEntity> auth(AuthenticationParams params) async {
     try {
-      await httpClient.request(
+      final httpResponse = await httpClient.request(
         url: url,
         method: 'post',
         body: RemoteAuthenticationParams.fromDomain(params).toJson(),
       );
+
+      return AccountEntity.fromJson(httpResponse);
     } on HttpError catch (error) {
       switch (error) {
         case HttpError.unauthorized:
