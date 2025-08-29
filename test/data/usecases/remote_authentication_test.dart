@@ -4,6 +4,8 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'package:curso_com_bloc/domain/usecases/usecases.dart';
+import 'package:curso_com_bloc/data/http/http_client.dart';
+import 'package:curso_com_bloc/data/usecases/remote_authentication.dart';
 
 import 'remote_authentication_test.mocks.dart';
 
@@ -41,27 +43,4 @@ void main() {
       );
     },
   );
-}
-
-class RemoteAuthentication {
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication({required this.httpClient, required this.url});
-
-  Future<void> auth(AuthenticationParams params) async {
-    await httpClient.request(
-      url: url,
-      method: 'post',
-      body: params.toJson(),
-    );
-  }
-}
-
-abstract class HttpClient {
-  Future<void> request({
-    required String url,
-    required String method,
-    Map? body,
-  });
 }
