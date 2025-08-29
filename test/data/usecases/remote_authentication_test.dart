@@ -3,6 +3,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:curso_com_bloc/domain/usecases/usecases.dart';
+
 import 'remote_authentication_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<HttpClient>()])
@@ -20,11 +22,25 @@ void main() {
   });
 
   // Pattern de testes '3A'. Arrange, Act, Assert
-  test('Should call HttpClient with correct values', () async {
-    await sut.auth();
+  test(
+    'Should call HttpClient with correct values',
+    () async {
+      final params = AuthenticationParams(
+        email: faker.internet.email(),
+        secret: faker.internet.password(),
+      );
 
-    verify(httpClient.request(url: url, method: 'post'));
-  });
+      await sut.auth(params);
+
+      verify(
+        httpClient.request(
+          url: url,
+          method: 'post',
+          body: {'email': params.email, 'password': params.secret},
+        ),
+      );
+    },
+  );
 }
 
 class RemoteAuthentication {
@@ -33,11 +49,19 @@ class RemoteAuthentication {
 
   RemoteAuthentication({required this.httpClient, required this.url});
 
-  Future<void> auth() async {
-    await httpClient.request(url: url, method: 'post');
+  Future<void> auth(AuthenticationParams params) async {
+    await httpClient.request(
+      url: url,
+      method: 'post',
+      body: params.toJson(),
+    );
   }
 }
 
 abstract class HttpClient {
-  Future<void> request({required String url, required String method});
+  Future<void> request({
+    required String url,
+    required String method,
+    Map? body,
+  });
 }
