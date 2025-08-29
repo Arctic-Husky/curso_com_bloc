@@ -7,17 +7,22 @@ import 'remote_authentication_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<HttpClient>()])
 void main() {
-  test('Should call HttpClient with correct URL', () async {
-    final httpClient = MockHttpClient();
-    final url = faker.internet.httpUrl();
-    // sut = System Unit Test
-    final sut = RemoteAuthentication(httpClient: httpClient, url: url);
+  late RemoteAuthentication sut;
+  late MockHttpClient httpClient;
+  late String url;
 
+  setUp(() {
+    httpClient = MockHttpClient();
+    url = faker.internet.httpUrl();
+    // sut = System Unit Test
+    sut = RemoteAuthentication(httpClient: httpClient, url: url);
+  });
+
+  // Pattern de testes '3A'. Arrange, Act, Assert
+  test('Should call HttpClient with correct values', () async {
     await sut.auth();
 
-    verify(httpClient.request(url: url));
-
-    // Pattern de testes '3A'. Arrange, Act, Assert
+    verify(httpClient.request(url: url, method: 'post'));
   });
 }
 
@@ -28,10 +33,10 @@ class RemoteAuthentication {
   RemoteAuthentication({required this.httpClient, required this.url});
 
   Future<void> auth() async {
-    await httpClient.request(url: url);
+    await httpClient.request(url: url, method: 'post');
   }
 }
 
 abstract class HttpClient {
-  Future<void> request({required String url});
+  Future<void> request({required String url, required String method});
 }
