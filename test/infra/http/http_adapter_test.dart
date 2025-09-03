@@ -113,6 +113,29 @@ void main() {
         expect(response, {"any_key": "any_value"});
       },
     );
+
+    test(
+      'Should return null if post returns 200 with no data',
+      () async {
+        when(
+          client.post(
+            any,
+            headers: anyNamed('headers'),
+          ),
+        ).thenAnswer(
+          (_) async => Response('', 200),
+        );
+
+        // Etapa Act
+        final response = await sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(response, null);
+      },
+    );
   });
 }
 
@@ -122,7 +145,7 @@ class HttpAdapter implements HttpClient {
   HttpAdapter(this.client);
 
   @override
-  Future<Map> request({
+  Future<Map?> request({
     required String url,
     required String method,
     Map? body,
@@ -138,6 +161,12 @@ class HttpAdapter implements HttpClient {
       headers: headers,
       body: jsonBody,
     );
+
+    final responseBody = response.body;
+
+    if (responseBody.isEmpty || responseBody.trim() == '') {
+      return null;
+    }
 
     return jsonDecode(response.body);
   }
