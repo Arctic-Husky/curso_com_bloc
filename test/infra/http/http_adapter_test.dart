@@ -6,6 +6,7 @@ import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 
+import 'package:curso_com_bloc/data/http/http.dart';
 import 'package:curso_com_bloc/infra/http/http.dart';
 
 // group('post', () {
@@ -153,6 +154,38 @@ void main() {
 
         // Etapa Assert
         expect(response, null);
+      },
+    );
+
+    test(
+      'Should return BadRequestError if post returns 400',
+      () async {
+        mockResponse(400, body: '');
+
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.badRequest));
+      },
+    );
+
+    test(
+      'Should return BadRequestError if post returns 400',
+      () async {
+        mockResponse(400);
+
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.badRequest));
       },
     );
   });

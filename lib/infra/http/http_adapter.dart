@@ -31,8 +31,13 @@ class HttpAdapter implements HttpClient {
   }
 
   Map? _handleResponse(Response response) {
-    if (response.statusCode != 200) {
-      return null;
+    switch (response.statusCode) {
+      case 200:
+        break;
+      case 204:
+        return null;
+      default:
+        throw HttpError.badRequest;
     }
 
     final responseBody = response.body;
