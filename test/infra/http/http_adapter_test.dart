@@ -12,22 +12,28 @@ import 'http_adapter_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<Client>()])
 void main() {
+  late MockClient client;
+  late HttpAdapter sut;
+  late Uri url;
+
+  setUp(() {
+    // Etapa Arrange
+    client = MockClient();
+    sut = HttpAdapter(client);
+    url = Uri.parse(faker.internet.httpUrl());
+  });
+
   group('post', () {
     test(
       'Should call post with correct values',
       () async {
-        // Etapa Arrange
-        final client = MockClient();
-        final sut = HttpAdapter(client);
-        final url = faker.internet.httpUrl();
-
         // Etapa Act
-        await sut.request(url: url, method: 'post');
+        await sut.request(url: url.toString(), method: 'post');
 
         // Etapa Assert
         verify(
           client.post(
-            Uri.parse(url),
+            url,
             headers: {
               'content-type': 'application/json',
               'accept': 'application/json',
