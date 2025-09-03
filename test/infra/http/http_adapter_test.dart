@@ -138,6 +138,22 @@ void main() {
         expect(response, null);
       },
     );
+
+    test(
+      'Should return null if post returns 204 with data',
+      () async {
+        mockResponse(204);
+
+        // Etapa Act
+        final response = await sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(response, null);
+      },
+    );
   });
 }
 
@@ -163,6 +179,10 @@ class HttpAdapter implements HttpClient {
       headers: headers,
       body: jsonBody,
     );
+
+    if (response.statusCode != 200) {
+      return null;
+    }
 
     final responseBody = response.body;
 
