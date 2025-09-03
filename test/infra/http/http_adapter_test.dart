@@ -190,6 +190,22 @@ void main() {
     );
 
     test(
+      'Should return UnauthorizedError if post returns 401',
+      () async {
+        mockResponse(401);
+
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.unauthorized));
+      },
+    );
+
+    test(
       'Should return ForbiddenError if post returns 403',
       () async {
         mockResponse(403);
@@ -206,9 +222,9 @@ void main() {
     );
 
     test(
-      'Should return UnauthorizedError if post returns 401',
+      'Should return NotFoundError if post returns 404',
       () async {
-        mockResponse(401);
+        mockResponse(404);
 
         // Etapa Act
         final future = sut.request(
@@ -217,7 +233,7 @@ void main() {
         );
 
         // Etapa Assert
-        expect(future, throwsA(HttpError.unauthorized));
+        expect(future, throwsA(HttpError.notFound));
       },
     );
 
