@@ -28,12 +28,16 @@ class HttpAdapter implements HttpClient {
     };
     final jsonBody = body != null ? jsonEncode(body) : null;
 
-    final response = await client.post(
-      Uri.parse(url),
-      headers: headers,
-      body: jsonBody,
-    );
-
+    late Response response;
+    try {
+      response = await client.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonBody,
+      );
+    } catch (_) {
+      throw HttpError.serverError;
+    }
     return _handleResponse(response);
   }
 
