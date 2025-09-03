@@ -190,6 +190,22 @@ void main() {
     );
 
     test(
+      'Should return ForbiddenError if post returns 403',
+      () async {
+        mockResponse(403);
+
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.forbidden));
+      },
+    );
+
+    test(
       'Should return UnauthorizedError if post returns 401',
       () async {
         mockResponse(401);
