@@ -188,5 +188,21 @@ void main() {
         expect(future, throwsA(HttpError.badRequest));
       },
     );
+
+    test(
+      'Should return ServerError if post returns 500',
+      () async {
+        mockResponse(500);
+
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.serverError));
+      },
+    );
   });
 }
