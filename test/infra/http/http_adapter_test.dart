@@ -51,6 +51,25 @@ void main() {
         );
       },
     );
+
+    test(
+      'Should call post without body',
+      () async {
+        // Etapa Act
+        await sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        verify(
+          client.post(
+            any,
+            headers: anyNamed('headers'),
+          ),
+        );
+      },
+    );
   });
 }
 
@@ -68,10 +87,12 @@ class HttpAdapter {
       'content-type': 'application/json',
       'accept': 'application/json',
     };
+    final jsonBody = body != null ? jsonEncode(body) : null;
+
     await client.post(
       Uri.parse(url),
       headers: headers,
-      body: jsonEncode(body),
+      body: jsonBody,
     );
   }
 }
