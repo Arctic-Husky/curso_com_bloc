@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
 import 'package:test/test.dart';
@@ -28,7 +30,11 @@ void main() {
       'Should call post with correct values',
       () async {
         // Etapa Act
-        await sut.request(url: url.toString(), method: 'post');
+        await sut.request(
+          url: url.toString(),
+          method: 'post',
+          body: {"any_key": "any_value"},
+        );
 
         // Etapa Assert
         verify(
@@ -38,6 +44,9 @@ void main() {
               'content-type': 'application/json',
               'accept': 'application/json',
             },
+            body: jsonEncode(
+              {"any_key": "any_value"},
+            ),
           ),
         );
       },
@@ -59,6 +68,10 @@ class HttpAdapter {
       'content-type': 'application/json',
       'accept': 'application/json',
     };
-    await client.post(Uri.parse(url), headers: headers);
+    await client.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
   }
 }
