@@ -28,6 +28,22 @@ void main() {
     url = Uri.parse(faker.internet.httpUrl());
   });
 
+  group('shared', () {
+    test(
+      'Should throw ServerError if invalid method is provided',
+      () async {
+        // Etapa Act
+        final future = sut.request(
+          url: url.toString(),
+          method: 'invalid_method',
+        );
+
+        // Etapa Assert
+        expect(future, throwsA(HttpError.serverError));
+      },
+    );
+  });
+
   group('post', () {
     PostExpectation mockRequest() => when(
       client.post(

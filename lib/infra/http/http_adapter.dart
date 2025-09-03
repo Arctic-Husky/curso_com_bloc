@@ -15,6 +15,13 @@ class HttpAdapter implements HttpClient {
     required String method,
     Map? body,
   }) async {
+    switch (method) {
+      case 'post':
+        break;
+      default:
+        return _handleResponse(Response('', 500));
+    }
+
     final headers = {
       'content-type': 'application/json',
       'accept': 'application/json',
