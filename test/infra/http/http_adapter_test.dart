@@ -122,6 +122,22 @@ void main() {
         expect(response, null);
       },
     );
+
+    test(
+      'Should return null if post returns 204',
+      () async {
+        mockResponse(204, body: '');
+
+        // Etapa Act
+        final response = await sut.request(
+          url: url.toString(),
+          method: 'post',
+        );
+
+        // Etapa Assert
+        expect(response, null);
+      },
+    );
   });
 }
 
